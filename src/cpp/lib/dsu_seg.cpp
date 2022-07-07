@@ -4,16 +4,11 @@
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
-
-namespace np = boost::python::numpy;
-
-np::ndarray segment(const np::ndarray& segmented) {
-    return segmented;
-}
+#include "include/dsu_seg_impl.h"
 
 BOOST_PYTHON_MODULE(dsu_seg_bachend)
 {
     Py_Initialize();
-    np::initialize();
-    boost::python::def("print_dims", segment);
+    boost::python::numpy::initialize();
+    boost::python::def("print_dims", gseg::segment);
 }
