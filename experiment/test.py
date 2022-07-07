@@ -1,4 +1,8 @@
-from ctypes import cdll
-lib = cdll.LoadLibrary('./libtestfunctions.so')
+import numpy as np
+import test_cpp_functions
 
-lib.fake_sum(3, 4);
+arr = np.array([1, 2, 3])
+arr2d = np.array([[1, 2, 3]])
+
+test_cpp_functions.print_dims(arr)    # prints "3, "
+test_cpp_functions.print_dims(arr2d)  # prints "1, 3, "
