@@ -9,7 +9,7 @@
 
 namespace gseg::impl {
     boost::python::numpy::ndarray
-    segment(const boost::python::numpy::ndarray &segmented, std::size_t pix_dim);
+    segment(const boost::python::numpy::ndarray &segmented, std::size_t lastDim);
 }
 
 #endif //DSU_SEG_BACKEND_SEGMENT_H

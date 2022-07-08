@@ -8,19 +8,34 @@
 #include <array>
 #include <numeric>
 
-#include "pixel.h"
+#include "pixel_view.h"
 
 namespace gdsu::impl {
 
+    ////////////////////////////////////////////////////////////////////////////
+    // class DataView
     class DataView {
     public:
+        /**
+         * Data view constructor.
+         * @param data - pointer to data.
+         * @param dimensions - three dimensions: with, height an channels.
+         */
         DataView(double* data, std::array<std::size_t, 3>&& dimensions);
 
-        Pixel get(std::size_t vert, std::size_t hot) const;
+        /**
+         * Get pixel view by a pair of indexes.
+         * @param hor - horizontal index.
+         * @param vert - vertical index.
+         * @return pixel view.
+         */
+        [[nodiscard]] PixelView get(std::size_t hor, std::size_t vert) const;
 
     private:
         double* _data;
         std::array<std::size_t, 3> _dimensions;
+    private:
+        friend class PixelView;
     };
 
 }

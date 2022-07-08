@@ -12,6 +12,7 @@ gdsu::impl::DataView::DataView(double *data,
       _dimensions(dimensions) {}
 
 //----------------------------------------------------------------------------//
-auto gdsu::impl::DataView::get(std::size_t hor, std::size_t vert) const -> Pixel {
+auto
+gdsu::impl::DataView::get(std::size_t hor, std::size_t vert) const -> PixelView {
     return {this, hor, vert};
 }
