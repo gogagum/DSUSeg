@@ -12,8 +12,9 @@
 #include <stdexcept>
 #include <boost/math/tools/norms.hpp>
 
+#include "pixel.hpp"
 
-namespace gdsu::impl {
+namespace gseg::impl {
 
     namespace bmt = boost::math::tools;
 
@@ -48,6 +49,8 @@ namespace gdsu::impl {
          * @return channel.
          */
         [[nodiscard]] double getChannel(std::size_t i) const;
+
+        std::size_t getSize() const;
     private:
         const double *_ptr;
         std::size_t _num_dim;
@@ -59,7 +62,7 @@ namespace gdsu::impl {
 ////////////////////////////////////////////////////////////////////////////////
 //----------------------------------------------------------------------------//
 template<class IteratorT>
-double gdsu::impl::PixelView::distance(const PixelView& pv1,
+double gseg::impl::PixelView::distance(const PixelView& pv1,
                                        const PixelView& pv2,
                                        PixelView::NormT<IteratorT> norm) {
     if (pv1._num_dim != pv2._num_dim) {
@@ -69,4 +72,25 @@ double gdsu::impl::PixelView::distance(const PixelView& pv1,
                 + std::to_string(pv2._num_dim));
     }
     return norm(pv1._ptr, pv1._ptr + pv1._num_dim, pv2._ptr);
+}
+
+//----------------------------------------------------------------------------//
+template <class PixelT, std::size_t maxSize>
+gseg::impl::Pixel<maxSize> avg(const PixelT& p1,
+                               const gseg::impl::Pixel<maxSize>& p2) {
+    if (p1.getSize() != p2.getSize()) {
+        throw std::invalid_argument("Pixels are of different channel numbers.");
+    }
+    auto retDataArr = boost::container::static_vector<double, maxSize>();
+    for (std::size_t i = 0; i < p1.getSize(); ++i) {
+        retDataArr.push_back((p1.getChannel(i) + p2.getChannel(i)) / 2);
+    }
+    return gseg::impl::Pixel(retDataArr.data(), retDataArr.size());
+}
+
+//----------------------------------------------------------------------------//
+template <class PixelT, std::size_t maxSize>
+gseg::impl::Pixel<maxSize> avg(const gseg::impl::Pixel<maxSize>& p1,
+                               const PixelT& p2) {
+    return avg(p2, p1);
 }

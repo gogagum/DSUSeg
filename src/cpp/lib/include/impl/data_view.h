@@ -10,7 +10,7 @@
 
 #include "pixel_view.h"
 
-namespace gdsu::impl {
+namespace gseg::impl {
 
     ////////////////////////////////////////////////////////////////////////////
     // class DataView
@@ -22,6 +22,12 @@ namespace gdsu::impl {
          * @param dimensions - three dimensions: with, height an channels.
          */
         DataView(double* data, std::array<std::size_t, 3>&& dimensions);
+
+        /**
+         * Data view move constructor.
+         * @param other - data view to construct from.
+         */
+        DataView(DataView&& other) noexcept;
 
         /**
          * Get pixel view by a pair of indexes.
