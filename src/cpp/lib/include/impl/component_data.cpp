@@ -6,6 +6,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //----------------------------------------------------------------------------//
-gseg::impl::ComponentData::ComponentData(PixelView &&pixelView)
-    : gdsu::BaseRootDSUData<PixelView>(std::move(pixelView)),
-      _additionalThreshold(0) {}
+gseg::impl::ComponentData::ComponentData(const PixelView& pixelView)
+    : gdsu::BaseRootDSUData<PixelView>(pixelView),
+      _additionalThreshold(0), _avgPixel(pixelView.getPixel({})) {}
+
+//----------------------------------------------------------------------------//
+void gseg::impl::ComponentData::joinWith(const ComponentData &other) {
+    _avgPixel = weighted_avg(_size, _avgPixel, other._size, other._avgPixel);
+}
