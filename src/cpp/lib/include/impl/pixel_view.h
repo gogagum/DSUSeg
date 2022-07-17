@@ -113,6 +113,12 @@ namespace gseg::impl {
         template<class NormTag>
         friend class PixelDistanceHelper;
     };
+
+    struct PixelViewImplCmp {
+        bool operator ()(const PixelView& pv1, const PixelView& pv2) const;
+    };
+
+
 }
 
 #endif //DSU_SEG_BACKEND_PIXEL_VIEW_H

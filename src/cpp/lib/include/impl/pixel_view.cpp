@@ -68,3 +68,11 @@ gseg::impl::Pixel<maxSize> gseg::impl::PixelView::getPixel(
 const double* gseg::impl::PixelView::getPtr() const {
     return _ptr;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------//
+bool
+gseg::impl::PixelViewImplCmp::operator()(const gseg::impl::PixelView &pv1,
+                                         const gseg::impl::PixelView &pv2) const {
+    return pv1.getPtr() < pv2.getPtr();
+}

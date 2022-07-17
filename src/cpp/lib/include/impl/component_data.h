@@ -12,11 +12,13 @@ namespace gseg::impl {
 
     ////////////////////////////////////////////////////////////////////////////
     // class ComponentData
-    class ComponentData : gdsu::BaseRootDSUData<PixelView> {
+    class ComponentData : public gdsu::BaseRootDSUData<PixelView> {
     public:
         explicit ComponentData(const PixelView& pixelView);
 
         void joinWith(const ComponentData& other);
+
+        ComponentData(const ComponentData& other);
     private:
         double _additionalThreshold;
         Pixel<5> _avgPixel;

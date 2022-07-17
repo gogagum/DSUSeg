@@ -21,6 +21,9 @@ namespace gseg::impl {
          */
         Pixel(const double* ptr, std::size_t numChannels);
 
+        Pixel(const Pixel<maxSize>& other);
+
+
         /**
          * Get one channel.
          * @param i - channel index.
@@ -58,6 +61,11 @@ namespace gseg::impl {
 template<std::size_t maxSize>
 gseg::impl::Pixel<maxSize>::Pixel(const double *ptr, std::size_t numChannels)
         : _channels(ptr, ptr + numChannels) {}
+
+//----------------------------------------------------------------------------//
+template<std::size_t maxSize>
+gseg::impl::Pixel<maxSize>::Pixel(const gseg::impl::Pixel<maxSize> &other)
+        : _channels(other._channels) {}
 
 //----------------------------------------------------------------------------//
 template<std::size_t maxSize>

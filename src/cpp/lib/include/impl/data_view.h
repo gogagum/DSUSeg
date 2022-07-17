@@ -16,6 +16,34 @@ namespace gseg::impl {
     // class DataView
     class DataView {
     public:
+        class PixelViewIterator {
+        public:
+            using iterator_category = std::input_iterator_tag;
+            using value_type = PixelView;
+            using difference_type = int;
+            using pointer = PixelView*;
+            using reference = PixelView&;
+
+        public:
+            PixelViewIterator(const DataView* owner, std::size_t i, std::size_t j);
+
+            PixelViewIterator operator++();
+
+            bool operator==(const PixelViewIterator& other) const;
+
+            bool operator!=(const PixelViewIterator& other) const;
+
+            PixelView operator*() const;
+
+
+
+        private:
+            std::size_t _i;
+            std::size_t _j;
+            const DataView* _owner;
+        };
+
+    public:
         /**
          * Data view constructor.
          * @param data - pointer to data.
@@ -36,6 +64,14 @@ namespace gseg::impl {
          * @return pixel view.
          */
         [[nodiscard]] PixelView get(std::size_t hor, std::size_t vert) const;
+
+        [[nodiscard]] std::size_t getRowsNum() const;
+
+        [[nodiscard]] std::size_t getColumnsNum() const;
+
+        [[nodiscard]] PixelViewIterator getPixelsBegin() const;
+
+        [[nodiscard]] PixelViewIterator getPixelsEnd() const;
 
     private:
         double* _data;
