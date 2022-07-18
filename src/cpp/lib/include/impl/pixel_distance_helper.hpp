@@ -17,27 +17,67 @@
 namespace gseg::impl {
 
     namespace norm {
+
+        ////////////////////////////////////////////////////////////////////////
+        /**
+         * class L2Tag
+         */
         class L2Tag {};
 
+        ////////////////////////////////////////////////////////////////////////
+        /**
+         * class L1Tag
+         */
         class L1Tag {};
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    /**
+     * class PixelDistanceHelper
+     * @tparam NormTag - type of norm.
+     */
     template<class NormTag>
-    class PixelHelper {
+    class PixelDistanceHelper {
     public:
+
+        /**
+         * Compute distance between two pixels.
+         * @tparam maxSize - maximum pixel channels count.
+         * @param pixel1 - one pixel.
+         * @param pixel2 - other pixel.
+         * @return - distance between two pixels.
+         */
         template<std::size_t maxSize>
         static double distance(const Pixel<maxSize>& pixel1,
                                const Pixel<maxSize>& pixel2);
 
+        /**
+         * Compute distance between two pixels.
+         * @param pixelView1 - one pixel.
+         * @param pixelView2 - other pixel.
+         * @return - distance between two pixels.
+         */
         static double distance(const PixelView& pixelView1,
                                const PixelView& pixelView2);
     private:
 
-        static double distanceImpl(const double* ptr1,
-                                   std::size_t dimNum1,
-                                   const double* ptr2);
+        /**
+         * Cont distance by data pointers.
+         * @param ptr1 - first pointer.
+         * @param dimNum1 - number of dimensions.
+         * @param ptr2 - second pointer.
+         * @return - distance between to pixels.
+         */
+        static double _distanceImpl(const double* ptr1,
+                                    std::size_t dimNum1,
+                                    const double* ptr2);
 
-        static void checkDimensions(std::size_t dim1, std::size_t dim2);
+        /**
+         * Check equality of dimensions numbers.
+         * @param dim1 - first number of dimensions.
+         * @param dim2 - second number of dimensions.
+         */
+        static void _checkDimensions(std::size_t dim1, std::size_t dim2);
     };
 } // gdsu::impl
 
@@ -47,23 +87,24 @@ namespace gseg::impl {
 //----------------------------------------------------------------------------//
 template<class NormTag>
 template<std::size_t maxSize>
-double gseg::impl::PixelHelper<NormTag>::distance(const Pixel<maxSize> &pixel1,
-                                                  const Pixel<maxSize> &pixel2) {
+double
+gseg::impl::PixelDistanceHelper<NormTag>::distance(
+        const Pixel<maxSize> &pixel1, const Pixel<maxSize> &pixel2) {
     checkDimensions(pixel1.getSize(), pixel2.getSize());
     return distanceImpl(pixel1.getPtr(), pixel1.getSize(), pixel2.getPtr());
 }
 
 //----------------------------------------------------------------------------//
 template<class NormTag>
-double gseg::impl::PixelHelper<NormTag>::distance(const PixelView &pixelView1,
+double gseg::impl::PixelDistanceHelper<NormTag>::distance(const PixelView &pixelView1,
                                                   const PixelView &pixelView2) {
-    checkDimensions(pixelView1.getSize(), pixelView2.getSize());
-    return distanceImpl(pixelView1.getPtr(), pixelView1.getSize(), pixelView2.getPtr());
+    _checkDimensions(pixelView1.getSize(), pixelView2.getSize());
+    return _distanceImpl(pixelView1.getPtr(), pixelView1.getSize(), pixelView2.getPtr());
 }
 
 //----------------------------------------------------------------------------//
 template<class NormTag>
-double gseg::impl::PixelHelper<NormTag>::distanceImpl(const double *ptr1,
+double gseg::impl::PixelDistanceHelper<NormTag>::_distanceImpl(const double *ptr1,
                                                       std::size_t dimNum1,
                                                       const double *ptr2) {
     if constexpr(std::is_same_v<NormTag, norm::L2Tag>) {
@@ -75,7 +116,7 @@ double gseg::impl::PixelHelper<NormTag>::distanceImpl(const double *ptr1,
 
 //----------------------------------------------------------------------------//
 template<class NormTag>
-void gseg::impl::PixelHelper<NormTag>::checkDimensions(std::size_t dim1,
+void gseg::impl::PixelDistanceHelper<NormTag>::_checkDimensions(std::size_t dim1,
                                                        std::size_t dim2) {
     if (dim1 != dim2) {
         throw std::invalid_argument("Pixels have different dimensions numbers: "

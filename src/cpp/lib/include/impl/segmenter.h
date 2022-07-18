@@ -12,16 +12,41 @@
 
 namespace gseg::impl {
 
+    ////////////////////////////////////////////////////////////////////////////
+    // class Segmenter
     class Segmenter {
     public:
+        /**
+         * Segmenter constructor.
+         * @param dataView - view to a file.
+         */
         explicit Segmenter(DataView&& dataView);
     private:
+        /**
+         * Initialize DSU.
+         */
         void _initDSU();
+
+        /**
+         * Generate graph edges.
+         */
         void _generateEdges();
+
+        /**
+         * Sort edges by pixel distance.
+         */
         void _sortEdges();
+
+        /**
+         * Process image by DSU segmentation algorithm.
+         */
+        void _process();
     private:
+        // Edges list.
         std::vector<Edge> _edges;
+        // View to an image data.
         DataView _dataView;
+        // DSU of pixels.
         gdsu::DSUWithData<PixelView, ComponentData, PixelViewImplCmp> _dsu;
     };
 

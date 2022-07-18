@@ -9,6 +9,7 @@
 
 namespace np = boost::python::numpy;
 
+////////////////////////////////////////////////////////////////////////////////
 //----------------------------------------------------------------------------//
 np::ndarray gseg::impl::segment(const np::ndarray &segmented,
                                 std::size_t lastDim) {

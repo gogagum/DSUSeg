@@ -19,6 +19,9 @@ namespace gseg::impl {
         void joinWith(const ComponentData& other);
 
         ComponentData(const ComponentData& other);
+
+        [[nodiscard]] double getAdditionalThreshold() const;
+
     private:
         double _additionalThreshold;
         Pixel<5> _avgPixel;

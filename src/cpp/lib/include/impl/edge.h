@@ -8,6 +8,11 @@
 #include "pixel_view.h"
 
 namespace gseg::impl {
+
+    ////////////////////////////////////////////////////////////////////////////
+    /**
+     * class Edge
+     */
     class Edge {
     public:
         /**
@@ -18,12 +23,38 @@ namespace gseg::impl {
         Edge(const PixelView& pixelView1, const PixelView& pixelView2);
 
         /**
+         * Edge copy constructor.
+         * @param other - edge to copy from.
+         */
+        Edge(const Edge& other) = default;
+
+        /**
+         * Edge move assignment.
+         * @param other - edge to move from.
+         * @return reference to itself.
+         */
+        Edge& operator=(Edge&& other) = default;
+
+        /**
          * Get pixel difference.
          * @return edge pixels distance.
          */
         [[nodiscard]] double getLength() const;
+
+        /**
+         * Get a pair of pixel views of dots connected by edge.
+         * @return two pixel views references.
+         */
+        [[nodiscard]] std::pair<PixelViewConstRef , PixelViewConstRef>
+        getPixelViews() const;
+
     private:
-        double _length;
+        // Distance between two pixels
+        double _pixelsDistance;
+        // One pixel view
+        PixelView _pv1;
+        // Other pixel view
+        PixelView _pv2;
     };
 
 } // impl

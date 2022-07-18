@@ -14,7 +14,7 @@ add_library(dsu_seg_backend SHARED lib/dsu_seg.cpp
     lib/include/impl/pixel_view.cpp lib/include/impl/segment.cpp
     lib/include/impl/segmenter.cpp lib/include/impl/component_data.cpp
     lib/include/impl/edge.cpp)
-add_subdirectory(lib/include/DSUWithData/lib)
+add_subdirectory(lib/include/DSUWithData)
 
 set_target_properties(dsu_seg_backend PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(dsu_seg_backend ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} DSUWithData)

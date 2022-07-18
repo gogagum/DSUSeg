@@ -8,31 +8,6 @@
 #include "data_view.h"
 
 
-////////////////////////////////////////////////////////////////////////////////
-//----------------------------------------------------------------------------//
-gseg::impl::PixelView::ChannelsRng::ChannelsRng(double *ptr,
-                                                std::size_t numDim)
-    : _begin(ptr), _end(ptr + numDim) {}
-
-//----------------------------------------------------------------------------//
-auto gseg::impl::PixelView::ChannelsRng::begin() -> Iterator {
-    return _begin;
-}
-
-//----------------------------------------------------------------------------//
-auto gseg::impl::PixelView::ChannelsRng::end() -> Iterator {
-    return _end;
-}
-
-//----------------------------------------------------------------------------//
-auto gseg::impl::PixelView::ChannelsRng::cbegin() const -> ConstIterator {
-    return _begin;
-}
-
-//----------------------------------------------------------------------------//
-auto gseg::impl::PixelView::ChannelsRng::cend() const -> ConstIterator {
-    return _end;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //----------------------------------------------------------------------------//

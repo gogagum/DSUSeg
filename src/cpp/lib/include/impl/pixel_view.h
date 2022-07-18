@@ -25,49 +25,6 @@ namespace gseg::impl {
     // class PixelView
     class PixelView {
     public:
-        ////////////////////////////////////////////////////////////////////////
-        // ChannelsRng
-        class ChannelsRng{
-        public:
-            using Iterator = double*;
-            using ConstIterator = const double*;
-        public:
-
-            /**
-             * Channels range constructor.
-             * @param ptr - pointer to first channel data.
-             * @param numDim - number of dimensions.
-             */
-            ChannelsRng(double* ptr, std::size_t numDim);
-
-            /**
-             * Range beginning.
-             * @return first channel iterator.
-             */
-            Iterator begin();
-
-            /**
-             * Range end.
-             * @return range end iterator.
-             */
-            Iterator end();
-
-            /**
-             *
-             * @return
-             */
-            [[nodiscard]] ConstIterator cbegin() const;
-
-            /**
-             *
-             * @return
-             */
-            [[nodiscard]] ConstIterator cend() const;
-        private:
-            double* _begin;
-            double* _end;
-        };
-    public:
 
         /**
          * Pixel view constructor.
@@ -76,6 +33,18 @@ namespace gseg::impl {
          * @param j - second dimension index.
          */
         PixelView(const DataView* dataView, std::size_t i, std::size_t j);
+
+        /**
+         * Copy constructor.
+         * @param other - pixel view to copy from.
+         */
+        PixelView(const PixelView& other) = default;
+
+        /**
+         * Move constructor.
+         * @param other - pixel view to move from
+         */
+        PixelView(PixelView&& other) = default;
 
         /**
          * Get pixel channel by index.
@@ -105,6 +74,8 @@ namespace gseg::impl {
          */
         [[nodiscard]] const double* getPtr() const;
 
+        PixelView& operator=(PixelView&& other) = default;
+
     private:
         const double *_ptr;
         std::size_t _num_dim;
@@ -113,6 +84,9 @@ namespace gseg::impl {
         template<class NormTag>
         friend class PixelDistanceHelper;
     };
+
+    using PixelViewRef = std::reference_wrapper<PixelView>;
+    using PixelViewConstRef = std::reference_wrapper<const PixelView>;
 
     struct PixelViewImplCmp {
         bool operator ()(const PixelView& pv1, const PixelView& pv2) const;

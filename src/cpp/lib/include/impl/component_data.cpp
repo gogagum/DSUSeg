@@ -3,6 +3,7 @@
 //
 
 #include "component_data.h"
+#include "pixel_distance_helper.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //----------------------------------------------------------------------------//
@@ -21,5 +22,11 @@ gseg::impl::ComponentData::ComponentData(
 //----------------------------------------------------------------------------//
 void gseg::impl::ComponentData::joinWith(const ComponentData &other) {
     _avgPixel = weighted_avg(_size, _avgPixel, other._size, other._avgPixel);
+    _additionalThreshold +=
+            PixelDistanceHelper<norm::L2Tag>::distance(getKey(), other.getKey());
 }
 
+//----------------------------------------------------------------------------//
+double gseg::impl::ComponentData::getAdditionalThreshold() const {
+    return _additionalThreshold;
+}
