@@ -59,7 +59,7 @@ void gseg::impl::Segmenter::_initDSU() {
     std::vector<ComponentData> components;
     for (std::size_t row_i = 0; row_i < _dataView.getRowsNum(); ++row_i) {
         for (std::size_t col_i = 1; col_i < _dataView.getColumnsNum(); ++col_i) {
-            components.emplace_back(PixelView(&_dataView, row_i, col_i));
+            components.emplace_back(PixelView(&_dataView, row_i, col_i), _dataView.getColumnsNum() * row_i + col_i);
         }
     }
 }
@@ -76,4 +76,29 @@ void gseg::impl::Segmenter::_process() {
             _dsu.join(pv1, pv2);
         }
     }
+}
+
+//----------------------------------------------------------------------------//
+auto gseg::impl::Segmenter::_getSegmentsMapImpl() -> np::ndarray {
+    const p::tuple shape = p::make_tuple(_dataView.getColumnsNum(),
+                                         _dataView.getRowsNum());
+    const np::dtype indexType = np::dtype::get_builtin<long long>();
+    auto ret = np::zeros(shape, indexType);
+    std::map<std::size_t, std::size_t> coloursMap;
+    std::size_t currNewColour = 1;
+    for (std::size_t colI = 0; colI < _dataView.getColumnsNum(); ++colI) {
+        for (std::size_t rowI = 0; rowI < _dataView.getRowsNum(); ++rowI) {
+            const PixelView pv = _dataView.get(colI, rowI);
+            const std::size_t colour = _dsu.getRootData(pv).getFlagColour();
+            if (auto colourIt = coloursMap.find(colour);
+            colourIt != coloursMap.end()) {
+                ret[rowI][colI] = colourIt->second;
+            } else {
+                coloursMap[currNewColour] = colour;
+                ret[rowI][colI] = currNewColour;
+                ++currNewColour;
+            }
+        }
+    }
+    return ret;
 }

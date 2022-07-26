@@ -9,6 +9,7 @@
 #include <numeric>
 
 #include "pixel_view.h"
+#include "component_data.h"
 
 namespace gseg::impl {
 
@@ -16,13 +17,28 @@ namespace gseg::impl {
     // class DataView
     class DataView {
     public:
-        class PixelViewIterator {
+        class ComponentDataIterator {
         public:
             using iterator_category [[maybe_unused]] = std::input_iterator_tag;
-            using value_type [[maybe_unused]] = PixelView;
+            using value_type [[maybe_unused]] = ComponentData;
             using difference_type [[maybe_unused]] = ptrdiff_t;
-            using pointer [[maybe_unused]] = PixelView*;
-            using reference [[maybe_unused]] = PixelView&;
+            using pointer [[maybe_unused]] = ComponentData*;
+            using reference [[maybe_unused]] = ComponentData&;
+
+        private:
+
+            class Proxy {
+            public:
+                // Constructor
+                explicit Proxy(ComponentDataIterator* owner) : _owner(owner) {};
+                // Operator ->
+                ComponentDataIterator::value_type* operator->() {
+                    return (value_type *) _owner->_owner;
+                }
+            private:
+                ComponentDataIterator* _owner;
+            };
+
 
         public:
 
@@ -32,13 +48,13 @@ namespace gseg::impl {
              * @param i - vertical index (row index).
              * @param j - horizontal index (column index).
              */
-            PixelViewIterator(const DataView* owner, std::size_t i, std::size_t j);
+            ComponentDataIterator(const DataView* owner, std::size_t i, std::size_t j);
 
             /**
              * Move to the next pixel.
              * @return
              */
-            PixelViewIterator operator++();
+            ComponentDataIterator operator++();
 
             /**
              * Comparison operator.
@@ -46,7 +62,7 @@ namespace gseg::impl {
              * @return `true if iterators are equal. `false if they are not
              * equal.
              */
-            bool operator==(const PixelViewIterator& other) const;
+            bool operator==(const ComponentDataIterator& other) const;
 
             /**
              * Not equal operator
@@ -54,13 +70,17 @@ namespace gseg::impl {
              * @return `true if iterators are not equal. `false if they are
              * equal.
              */
-            bool operator!=(const PixelViewIterator& other) const;
+            bool operator!=(const ComponentDataIterator& other) const;
 
             /**
              * Dereference operator.
              * @return view to an iterated pixel.
              */
-            PixelView operator*() const;
+            ComponentData operator*() const;
+
+            Proxy operator->() {
+                return Proxy(this);
+            }
 
         private:
             // Row index.
@@ -109,13 +129,13 @@ namespace gseg::impl {
          * Get iterator to a data view beginning.
          * @return iterator to beginning.
          */
-        [[nodiscard]] PixelViewIterator getPixelsBegin() const;
+        [[nodiscard]] ComponentDataIterator getPixelsBegin() const;
 
         /**
          * Get iterator to data view end.
          * @return iterator to end.
          */
-        [[nodiscard]] PixelViewIterator getPixelsEnd() const;
+        [[nodiscard]] ComponentDataIterator getPixelsEnd() const;
 
     private:
         // Pointer to image data.

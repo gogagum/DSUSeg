@@ -14,7 +14,9 @@ namespace gseg::impl {
     // class ComponentData
     class ComponentData : public gdsu::BaseRootDSUData<PixelView> {
     public:
-        explicit ComponentData(const PixelView& pixelView);
+        //explicit ComponentData(const PixelView& pixelView);
+
+        ComponentData(const PixelView& pixelView, std::size_t componentColour);
 
         void joinWith(const ComponentData& other);
 
@@ -22,8 +24,11 @@ namespace gseg::impl {
 
         [[nodiscard]] double getAdditionalThreshold() const;
 
+        [[nodiscard]] std::size_t getFlagColour() const;
+
     private:
         double _additionalThreshold;
+        const std::size_t _flagColour;
         Pixel<5> _avgPixel;
     };
 

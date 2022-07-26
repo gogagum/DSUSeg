@@ -31,24 +31,24 @@ std::size_t gseg::impl::DataView::getColumnsNum() const {
 }
 
 //----------------------------------------------------------------------------//
-auto gseg::impl::DataView::getPixelsBegin() const -> DataView::PixelViewIterator {
+auto gseg::impl::DataView::getPixelsBegin() const -> DataView::ComponentDataIterator {
     return {this, 0, 0};
 }
 
 //----------------------------------------------------------------------------//
-auto gseg::impl::DataView::getPixelsEnd() const -> DataView::PixelViewIterator {
+auto gseg::impl::DataView::getPixelsEnd() const -> DataView::ComponentDataIterator {
     return {this, getRowsNum() + 1, getColumnsNum()};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //----------------------------------------------------------------------------//
-gseg::impl::DataView::PixelViewIterator::PixelViewIterator(
+gseg::impl::DataView::ComponentDataIterator::ComponentDataIterator(
         const gseg::impl::DataView *owner, std::size_t i, std::size_t j)
     : _owner(owner), _i(i), _j(j) {}
 
 //----------------------------------------------------------------------------//
 auto
-gseg::impl::DataView::PixelViewIterator::operator++() -> DataView::PixelViewIterator {
+gseg::impl::DataView::ComponentDataIterator::operator++() -> DataView::ComponentDataIterator {
     if (_j == _owner->getColumnsNum()) {
         return {_owner, _i + 1, 0};
     } else {
@@ -58,19 +58,20 @@ gseg::impl::DataView::PixelViewIterator::operator++() -> DataView::PixelViewIter
 
 //----------------------------------------------------------------------------//
 bool
-gseg::impl::DataView::PixelViewIterator::operator==(
-        const PixelViewIterator& other) const {
+gseg::impl::DataView::ComponentDataIterator::operator==(
+        const ComponentDataIterator& other) const {
     return _owner == other._owner && _i == other._i && _j == other._j;
 }
 
 //----------------------------------------------------------------------------//
 bool
-gseg::impl::DataView::PixelViewIterator::operator!=(
-        const PixelViewIterator& other) const {
+gseg::impl::DataView::ComponentDataIterator::operator!=(
+        const ComponentDataIterator& other) const {
     return !operator==(other);
 }
 
 //----------------------------------------------------------------------------//
-gseg::impl::PixelView gseg::impl::DataView::PixelViewIterator::operator*() const {
-    return {_owner, _i, _j};
+gseg::impl::ComponentData
+gseg::impl::DataView::ComponentDataIterator::operator*() const {
+    return {{_owner, _i, _j}, _i * _owner->getColumnsNum() + _j};
 }

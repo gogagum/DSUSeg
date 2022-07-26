@@ -74,6 +74,11 @@ namespace gseg::impl {
          */
         [[nodiscard]] const double* getPtr() const;
 
+        /**
+         * Move assignment.
+         * @param other - pixel to move from.
+         * @return itself.
+         */
         PixelView& operator=(PixelView&& other) = default;
 
     private:
